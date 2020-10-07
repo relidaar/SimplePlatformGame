@@ -28,6 +28,6 @@
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.0.1641" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Content\levels\*" CopyToOutputDirectory="PreserveNewest"/>
+        <Content Include="Content\Levels\*" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 </Project>
