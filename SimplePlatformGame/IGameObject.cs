@@ -18,6 +18,7 @@ namespace SimplePlatformGame
                    Position.Y + Height > other.Position.Y;
         }
 
+        void Update();
         void Draw(SpriteBatch target);
     }
 }

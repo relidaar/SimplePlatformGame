@@ -42,6 +42,11 @@ namespace SimplePlatformGame
             }
         }
 
+        public void Update()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void Draw(SpriteBatch target)
         {
             target.Draw(Sprite.Texture, Position, Color.White);
