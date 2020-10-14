@@ -5,9 +5,9 @@ namespace SimplePlatformGame.Components
     public class Collider : ICollidable
     {
         public Rectangle HitBox { get; set; }
-        public Vector2 Dimensions { get; set; }
-        public Vector2 Position { get; set; }
-        public Vector2 OldPosition { get; set; }
+        public Point Dimensions { get; set; }
+        public Point Position { get; set; }
+        public Point OldPosition { get; set; }
         public Vector2 Velocity { get; set; }
         public bool IsStatic { get; }
         
@@ -17,9 +17,9 @@ namespace SimplePlatformGame.Components
         }
 
         public Collider(Rectangle hitBox,
-            Vector2 dimensions,
-            Vector2 position,
-            Vector2 oldPosition,
+            Point dimensions,
+            Point position,
+            Point oldPosition,
             Vector2 velocity,
             bool isStatic)
         {
