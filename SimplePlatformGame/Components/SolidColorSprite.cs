@@ -6,9 +6,6 @@ namespace SimplePlatformGame.Components
     public class SolidColorSprite : ISprite
     {
         public Texture2D Texture { get; }
-        public Rectangle Bounds => Texture.Bounds;
-        public int Width => Texture.Width;
-        public int Height => Texture.Height;
 
         public SolidColorSprite(int width, int height, Color color, GraphicsDevice graphics)
         {

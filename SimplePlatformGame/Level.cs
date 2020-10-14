@@ -10,18 +10,18 @@ namespace SimplePlatformGame
     public class Level
     {
         public Player Player { get; private set; }
-        public IList<GameObject> GameObjects { get; }
-        public IList<Collider> Colliders { get; }
+        private readonly IList<Collider> _colliders;
+        private readonly IList<GameObject> _gameObjects;
 
-        private Vector2 _gravity;
+        private readonly Vector2 _gravity;
 
         private readonly string _path;
         private readonly GraphicsDevice _graphics;
-        
+
         public Level(string path, GraphicsDevice graphicsDevice)
         {
-            GameObjects = new List<GameObject>();
-            Colliders = new List<Collider>();
+            _gameObjects = new List<GameObject>();
+            _colliders = new List<Collider>();
             _path = path;
             _graphics = graphicsDevice;
             _gravity = new Vector2(0, 10);
@@ -30,14 +30,14 @@ namespace SimplePlatformGame
         public void Update(float timeDelta)
         {
             Player.Update(_gravity * timeDelta);
-            foreach (var gameObject in GameObjects)
+            foreach (var gameObject in _gameObjects)
             {
                 gameObject.Update(_gravity * timeDelta);
             }
  
-            foreach (var collider in Colliders)
+            foreach (var collider in _colliders)
             {
-                foreach (var other in Colliders.Where(c => !c.Equals(collider)))
+                foreach (var other in _colliders.Where(c => !c.Equals(collider)))
                 {
                     var dynamicCollidable = collider;
                     var staticCollidable = other;
@@ -57,7 +57,7 @@ namespace SimplePlatformGame
         public void Draw(SpriteBatch target, float timeDelta)
         {
             Player.Draw(target, timeDelta);
-            foreach (var gameObject in GameObjects)
+            foreach (var gameObject in _gameObjects)
             {
                 gameObject.Draw(target, timeDelta);
             }
@@ -70,22 +70,20 @@ namespace SimplePlatformGame
                 .Where(x => !string.IsNullOrWhiteSpace(x));
             foreach (var values in valuesStrings.Select(x => x.Split(" ")))
             {
-                float posX = float.Parse(values[1]);
-                float posY = float.Parse(values[2]);
-                int width = int.Parse(values[3]);
-                int height = int.Parse(values[4]);
+                var (x, y) = (float.Parse(values[1]), float.Parse(values[2]));
+                var (width, height) = (int.Parse(values[3]), int.Parse(values[4]));
                 switch (values[0])
                 {
                     case "player":
-                        Player = new Player(new Vector2(posX, posY), 5, 5, 
+                        Player = new Player(new Vector2(x, y), 5, 5, 
                             new SolidColorSprite(width, height, Color.DimGray, _graphics));
-                        Colliders.Add(Player.Collider);
+                        _colliders.Add(Player.Collider);
                         break;
                     case "obstacle":
-                        var obstacle = new Obstacle(new Vector2(posX, posY),
+                        var obstacle = new Obstacle(new Vector2(x, y),
                             new SolidColorSprite(width, height, Color.White, _graphics));
-                        GameObjects.Add(obstacle);
-                        Colliders.Add(obstacle.Collider);
+                        _gameObjects.Add(obstacle);
+                        _colliders.Add(obstacle.Collider);
                         break;
                 }
             }
@@ -94,8 +92,8 @@ namespace SimplePlatformGame
         public void Dispose()
         {
             Player = null;
-            GameObjects.Clear();
-            Colliders.Clear();
+            _gameObjects.Clear();
+            _colliders.Clear();
         }
     }
 }
