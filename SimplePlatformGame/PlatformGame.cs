@@ -65,6 +65,7 @@ namespace SimplePlatformGame
             if (_currentLevel.Current == null)
             {
                 _gameOver = true;
+                base.Update(gameTime);
                 return;
             }
 
@@ -73,6 +74,7 @@ namespace SimplePlatformGame
                 _coins += _currentLevel.Current.CollectedCoins;
                 _currentLevel.Current.Unload();
                 _currentLevel.MoveNext();
+                _currentLevel.Current?.Load();
             }
 
             var movement = new[]

@@ -40,6 +40,20 @@
       "Width": 20,
       "Height": 100,
       "Color": "Transparent"
+    },
+    {
+      "X": 0,
+      "Y": 0,
+      "Width": 1,
+      "Height": 600,
+      "Color": "Transparent"
+    },
+    {
+      "X": 800,
+      "Y": 0,
+      "Width": 1,
+      "Height": 600,
+      "Color": "Transparent"
     }
   ],
   "obstacles": [

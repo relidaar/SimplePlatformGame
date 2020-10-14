@@ -1,0 +1,126 @@
+﻿{
+  "player" : {
+    "X": 100,
+    "Y": 290,
+    "Width": 20,
+    "Height": 40,
+    "Color": "DimGray",
+    "RunSpeed": 3,
+    "JumpSpeed": 5
+  },
+  "teleport" : {
+    "X": 760,
+    "Y": 250,
+    "Width": 20,
+    "Height": 100,
+    "Color": "Indigo"
+  },
+  "enemies" : [
+    {
+      "X": 500,
+      "Y": 180,
+      "Width": 30,
+      "Height": 30,
+      "Color": "Red",
+      "Speed": 1.3,
+      "Direction": "Left"
+    }
+  ],
+  "enemy_bounds" : [
+    {
+      "X": 0,
+      "Y": 0,
+      "Width": 1,
+      "Height": 600,
+      "Color": "Transparent"
+    },
+    {
+      "X": 800,
+      "Y": 0,
+      "Width": 1,
+      "Height": 600,
+      "Color": "Transparent"
+    },
+    {
+      "X": 259,
+      "Y": 340,
+      "Width": 1,
+      "Height": 10,
+      "Color": "Transparent"
+    }
+  ],
+  "obstacles": [
+    {
+      "X": 0,
+      "Y": 350,
+      "Width": 800,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 260,
+      "Y": 330,
+      "Width": 280,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 300,
+      "Y": 310,
+      "Width": 240,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 340,
+      "Y": 290,
+      "Width": 200,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 380,
+      "Y": 270,
+      "Width": 160,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 420,
+      "Y": 250,
+      "Width": 120,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 460,
+      "Y": 230,
+      "Width": 80,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 500,
+      "Y": 210,
+      "Width": 40,
+      "Height": 20,
+      "Color": "White"
+    }
+  ],
+  "coins": [
+    {
+      "X": 290,
+      "Y": 150,
+      "Width": 20,
+      "Height": 20,
+      "Color": "Gold"
+    },
+    {
+      "X": 700,
+      "Y": 180,
+      "Width": 20,
+      "Height": 20,
+      "Color": "Gold"
+    }
+  ]
+}
