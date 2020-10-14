@@ -11,12 +11,13 @@ namespace SimplePlatformGame.JsonObjects
         public int Width { get; set; }
         public int Height { get; set; }
 
-        public static Dictionary<string, Color> Colors = new Dictionary<string, Color>
+        public static readonly Dictionary<string, Color> Colors = new Dictionary<string, Color>
         {
             {"Black", Color.Black},
             {"White", Color.White},
             {"DimGray", Color.DimGray},
             {"Red", Color.Red},
+            {"Transparent", Color.Transparent}
         };
     }
 }
