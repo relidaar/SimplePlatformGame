@@ -18,7 +18,6 @@ namespace SimplePlatformGame
         private List<Obstacle> _enemyBounds;
         private List<Coin> _coins;
         private List<Enemy> _enemies;
-        private List<GameObject> _gameObjects;
 
         private readonly Vector2 _gravity;
 
@@ -31,7 +30,6 @@ namespace SimplePlatformGame
             _enemyBounds = new List<Obstacle>();
             _coins = new List<Coin>();
             _enemies = new List<Enemy>();
-            _gameObjects = new List<GameObject>();
             
             _path = path;
             _graphics = graphicsDevice;
@@ -47,6 +45,13 @@ namespace SimplePlatformGame
             {
                 Player.Collider.ResolveCollision(obstacle.Collider);
             }
+            if (_enemies.Any(x => Player.Collider.Intersects(x.Collider)))
+            {
+                Player.Alive = false;
+                Unload();
+                Load();
+            }
+            _coins = _coins.Where(coin => !Player.Collider.Intersects(coin.Collider)).ToList();
 
             _enemies.ForEach(x => x.Update(gravity));
             foreach (var enemy in _enemies)
@@ -66,12 +71,16 @@ namespace SimplePlatformGame
                     enemy.ChangeDirection();
                 }
             }
-
-            _coins = _coins.Where(coin => !Player.Collider.Intersects(coin.Collider)).ToList();
         }
 
-        public void Draw(SpriteBatch target, float timeDelta) => 
-            _gameObjects.ForEach(x => x.Draw(target, timeDelta));
+        public void Draw(SpriteBatch target, float timeDelta)
+        {
+            Player.Draw(target, timeDelta);
+            _obstacles.ForEach(x => x.Draw(target, timeDelta));
+            _enemyBounds.ForEach(x => x.Draw(target, timeDelta));
+            _coins.ForEach(x => x.Draw(target, timeDelta));
+            _enemies.ForEach(x => x.Draw(target, timeDelta));
+        }
 
         public void Load()
         {
@@ -87,63 +96,55 @@ namespace SimplePlatformGame
                 new SolidColorSprite(jsonPlayer.Width, jsonPlayer.Height, 
                     JsonGameObject.Colors[(string)jsonToken["Color"]], _graphics)
             );
-            _gameObjects.Add(Player);
 
             foreach (var token in json["obstacles"])
             {
                 var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
-                var gameObject = new Obstacle(
+                _obstacles.Add(new Obstacle(
                     new Vector2(jsonObject.X, jsonObject.Y),
                     new SolidColorSprite(jsonObject.Width, jsonObject.Height,
                         JsonGameObject.Colors[(string) token["Color"]], _graphics)
-                );
-                _obstacles.Add(gameObject);
-                _gameObjects.Add(gameObject);
+                ));
             }
 
             foreach (var token in json["enemy_bounds"])
             {
                 var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
-                var gameObject = new Obstacle(
+                _enemyBounds.Add(new Obstacle(
                     new Vector2(jsonObject.X, jsonObject.Y),
                     new SolidColorSprite(jsonObject.Width, jsonObject.Height,
                         JsonGameObject.Colors[(string) token["Color"]], _graphics)
-                );
-                _enemyBounds.Add(gameObject);
-                _gameObjects.Add(gameObject);
+                ));
             }
 
             foreach (var token in json["coins"])
             {
                 var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
-                var gameObject = new Coin(
+                _coins.Add(new Coin(
                     new Vector2(jsonObject.X, jsonObject.Y),
                     new SolidColorSprite(jsonObject.Width, jsonObject.Height,
                         JsonGameObject.Colors[(string) token["Color"]], _graphics)
-                );
-                _coins.Add(gameObject);
-                _gameObjects.Add(gameObject);
+                ));
             }
 
             foreach (var token in json["enemies"])
             {
                 var jsonObject = JsonConvert.DeserializeObject<JsonEnemy>(token.ToString());
-                var gameObject = new Enemy(
+                _enemies.Add(new Enemy(
                     new Vector2(jsonObject.X, jsonObject.Y), jsonObject.Speed, jsonObject.Direction,
                     new SolidColorSprite(jsonObject.Width, jsonObject.Height, 
                         JsonGameObject.Colors[(string)token["Color"]], _graphics)
-                );
-                _enemies.Add(gameObject);
-                _gameObjects.Add(gameObject);
+                ));
             }
         }
 
-        public void Dispose()
+        public void Unload()
         {
             Player = null;
             _obstacles.Clear();
             _coins.Clear();
             _enemies.Clear();
+            _enemyBounds.Clear();
         }
     }
 }

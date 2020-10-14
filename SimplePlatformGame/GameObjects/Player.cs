@@ -6,6 +6,7 @@ namespace SimplePlatformGame.GameObjects
 {
     public class Player : GameObject
     {
+        public bool Alive { get; set; } = true;
         private readonly float _runSpeed;
         private readonly float _jumpSpeed;
 
@@ -18,6 +19,7 @@ namespace SimplePlatformGame.GameObjects
 
         public void Move(Direction direction)
         {
+            if (!Alive) return;
             switch (direction)
             {
                 case Direction.Left:
@@ -56,6 +58,7 @@ namespace SimplePlatformGame.GameObjects
 
         public void Jump()
         {
+            if (!Alive) return;
             var collider = (PlayerCollider) Collider;
             if (!collider.Grounded) return;
             
@@ -65,6 +68,7 @@ namespace SimplePlatformGame.GameObjects
 
         public override void Update(Vector2 gravity)
         {
+            if (!Alive) return;
             Collider.OldPosition = Collider.Position;
             Collider.Position += Collider.Velocity;
             Collider.Velocity += gravity;
