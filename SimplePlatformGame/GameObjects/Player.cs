@@ -76,12 +76,4 @@ namespace SimplePlatformGame.GameObjects
             base.Draw(target, timeDelta);
         }
     }
-
-    public enum Direction
-    {
-        Left,
-        Right,
-        Up,
-        Down
-    }
 }

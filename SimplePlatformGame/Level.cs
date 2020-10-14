@@ -14,8 +14,10 @@ namespace SimplePlatformGame
     public class Level
     {
         public Player Player { get; private set; }
-        private readonly IList<Obstacle> _obstacles;
-        private IList<Coin> _coins;
+        private readonly List<Obstacle> _obstacles;
+        private List<Coin> _coins;
+        private List<Enemy> _enemies;
+        private List<GameObject> _gameObjects;
 
         private readonly Vector2 _gravity;
 
@@ -26,6 +28,8 @@ namespace SimplePlatformGame
         {
             _obstacles = new List<Obstacle>();
             _coins = new List<Coin>();
+            _enemies = new List<Enemy>();
+            _gameObjects = new List<GameObject>();
             
             _path = path;
             _graphics = graphicsDevice;
@@ -34,32 +38,28 @@ namespace SimplePlatformGame
 
         public void Update(float timeDelta)
         {
-            Player.Update(_gravity * timeDelta);
-
-            foreach (var obstacle in _obstacles)
+            var gravity = _gravity * timeDelta;
+            
+            Player.Update(gravity);
+            foreach (var obstacle in _obstacles.Where(obstacle => Player.Collider.Intersects(obstacle.Collider)))
             {
-                if (Player.Collider.Intersects(obstacle.Collider))
+                Player.Collider.ResolveCollision(obstacle.Collider);
+            }
+
+            _enemies.ForEach(x => x.Update(gravity));
+            foreach (var enemy in _enemies)
+            {
+                foreach (var obstacle in _obstacles.Where(obstacle => enemy.Collider.Intersects(obstacle.Collider)))
                 {
-                    Player.Collider.ResolveCollision(obstacle.Collider);
+                    enemy.Collider.ResolveCollision(obstacle.Collider);
                 }
             }
 
             _coins = _coins.Where(coin => !Player.Collider.Intersects(coin.Collider)).ToList();
         }
 
-        public void Draw(SpriteBatch target, float timeDelta)
-        {
-            Player.Draw(target, timeDelta);
-            foreach (var gameObject in _obstacles)
-            {
-                gameObject.Draw(target, timeDelta);
-            }
-
-            foreach (var coin in _coins)
-            {
-                coin.Draw(target, timeDelta);
-            }
-        }
+        public void Draw(SpriteBatch target, float timeDelta) => 
+            _gameObjects.ForEach(x => x.Draw(target, timeDelta));
 
         public void Load()
         {
@@ -75,25 +75,42 @@ namespace SimplePlatformGame
                 new SolidColorSprite(jsonPlayer.Width, jsonPlayer.Height, 
                     JsonGameObject.Colors[(string)jsonToken["Color"]], _graphics)
             );
+            _gameObjects.Add(Player);
 
             foreach (var token in json["obstacles"])
             {
-                var jsonObstacle = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
-                _obstacles.Add(new Obstacle(
-                    new Vector2(jsonObstacle.X, jsonObstacle.Y),
-                    new SolidColorSprite(jsonObstacle.Width, jsonObstacle.Height, 
-                        JsonGameObject.Colors[(string)token["Color"]], _graphics)
-                ));
+                var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
+                var gameObject = new Obstacle(
+                    new Vector2(jsonObject.X, jsonObject.Y),
+                    new SolidColorSprite(jsonObject.Width, jsonObject.Height,
+                        JsonGameObject.Colors[(string) token["Color"]], _graphics)
+                );
+                _obstacles.Add(gameObject);
+                _gameObjects.Add(gameObject);
             }
 
             foreach (var token in json["coins"])
             {
-                var jsonObstacle = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
-                _coins.Add(new Coin(
-                    new Vector2(jsonObstacle.X, jsonObstacle.Y),
-                    new SolidColorSprite(jsonObstacle.Width, jsonObstacle.Height, 
+                var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
+                var gameObject = new Coin(
+                    new Vector2(jsonObject.X, jsonObject.Y),
+                    new SolidColorSprite(jsonObject.Width, jsonObject.Height,
+                        JsonGameObject.Colors[(string) token["Color"]], _graphics)
+                );
+                _coins.Add(gameObject);
+                _gameObjects.Add(gameObject);
+            }
+
+            foreach (var token in json["enemies"])
+            {
+                var jsonObject = JsonConvert.DeserializeObject<JsonEnemy>(token.ToString());
+                var gameObject = new Enemy(
+                    new Vector2(jsonObject.X, jsonObject.Y), jsonObject.Speed, jsonObject.Direction,
+                    new SolidColorSprite(jsonObject.Width, jsonObject.Height, 
                         JsonGameObject.Colors[(string)token["Color"]], _graphics)
-                ));
+                );
+                _enemies.Add(gameObject);
+                _gameObjects.Add(gameObject);
             }
         }
 
@@ -102,6 +119,7 @@ namespace SimplePlatformGame
             Player = null;
             _obstacles.Clear();
             _coins.Clear();
+            _enemies.Clear();
         }
     }
 }
