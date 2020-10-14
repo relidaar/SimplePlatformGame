@@ -1,26 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using SimplePlatformGame.Components;
 
-namespace SimplePlatformGame
+namespace SimplePlatformGame.GameObjects
 {
-    public class Player : IGameObject
+    public class Player : GameObject
     {
-        public Vector2 Position { get; private set; }
-        public bool IsStatic { get; }
         public float Speed { get; private set; }
-        
-        public ISprite Sprite { get; }
-        public int Width { get; }
-        public int Height { get; }
+        public ICollidable Collider { get; }
 
-        public Player(Vector2 position, float speed, ISprite sprite)
+        public Player(Vector2 position, float speed, ISprite sprite) : base(position, sprite)
         {
-            Position = position;
             Speed = speed;
-            IsStatic = false;
-            Sprite = sprite;
-            Width = sprite.Width;
-            Height = sprite.Height;
         }
 
         public void Move(Direction direction)
@@ -42,14 +32,9 @@ namespace SimplePlatformGame
             }
         }
 
-        public void Update()
+        public override void Update()
         {
             throw new System.NotImplementedException();
-        }
-
-        public void Draw(SpriteBatch target)
-        {
-            target.Draw(Sprite.Texture, Position, Color.White);
         }
     }
 

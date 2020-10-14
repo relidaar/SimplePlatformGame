@@ -1,30 +1,25 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SimplePlatformGame.Components;
 
-namespace SimplePlatformGame
+namespace SimplePlatformGame.GameObjects
 {
-    public class GameObject : IGameObject
+    public abstract class GameObject : IGameObject
     {
-        public Vector2 Position { get; }
-        public bool IsStatic { get; }
-
+        public Vector2 Position { get; protected set; }
         public ISprite Sprite { get; }
         public int Width { get; }
         public int Height { get; }
 
-        public GameObject(Vector2 position, bool isStatic, ISprite sprite)
+        public GameObject(Vector2 position, ISprite sprite)
         {
             Position = position;
-            IsStatic = isStatic;
             Sprite = sprite;
             Width = sprite.Width;
             Height = sprite.Height;
         }
 
-        public void Update()
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract void Update();
 
         public void Draw(SpriteBatch target)
         {
