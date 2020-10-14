@@ -19,7 +19,7 @@ namespace SimplePlatformGame.GameObjects
             Height = sprite.Height;
         }
 
-        public abstract void Update();
+        public abstract void Update(Vector2 gravity);
 
         public virtual void Draw(SpriteBatch target)
         {

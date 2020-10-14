@@ -57,6 +57,7 @@ namespace SimplePlatformGame.GameObjects
         {
             Collider.OldPosition = Collider.Position;
             Collider.Position += Collider.Velocity;
+            Collider.Velocity += gravity;
         }
 
         public override void Draw(SpriteBatch target)

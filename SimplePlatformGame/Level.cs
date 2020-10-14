@@ -13,6 +13,8 @@ namespace SimplePlatformGame
         public IList<GameObject> GameObjects { get; }
         public IList<Collider> Colliders { get; }
 
+        private Vector2 _gravity;
+
         private readonly string _path;
         private readonly GraphicsDevice _graphics;
         
@@ -22,14 +24,15 @@ namespace SimplePlatformGame
             Colliders = new List<Collider>();
             _path = path;
             _graphics = graphicsDevice;
+            _gravity = new Vector2(0, 10);
         }
 
-        public void Update()
+        public void Update(float timeDelta)
         {
-            Player.Update();
-            foreach (var obstacle in Obstacles)
+            Player.Update(_gravity * timeDelta);
+            foreach (var gameObject in GameObjects)
             {
-                obstacle.Update();
+                gameObject.Update(_gravity * timeDelta);
             }
  
             foreach (var collider in Colliders)

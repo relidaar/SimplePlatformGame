@@ -12,7 +12,7 @@ namespace SimplePlatformGame.GameObjects
             Collider = new Collider(sprite.Bounds, position, true);
         }
 
-        public override void Update()
+        public override void Update(Vector2 gravity)
         {
         }
     }
