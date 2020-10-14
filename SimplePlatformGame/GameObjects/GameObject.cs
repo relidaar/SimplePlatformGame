@@ -21,7 +21,7 @@ namespace SimplePlatformGame.GameObjects
 
         public abstract void Update();
 
-        public void Draw(SpriteBatch target)
+        public virtual void Draw(SpriteBatch target)
         {
             target.Draw(Sprite.Texture, Position, Color.White);
         }
