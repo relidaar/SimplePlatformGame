@@ -1,0 +1,90 @@
+﻿{
+  "player" : {
+    "X": 100,
+    "Y": 290,
+    "Width": 20,
+    "Height": 40,
+    "Color": "DimGray",
+    "RunSpeed": 4,
+    "JumpSpeed": 5
+  },
+  "obstacles": [
+    {
+      "X": 0,
+      "Y": 350,
+      "Width": 200,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 200,
+      "Y": 350,
+      "Width": 20,
+      "Height": 100,
+      "Color": "White"
+    },
+    {
+      "X": 200,
+      "Y": 450,
+      "Width": 200,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 250,
+      "Y": 280,
+      "Width": 100,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 380,
+      "Y": 350,
+      "Width": 20,
+      "Height": 100,
+      "Color": "White"
+    },
+    {
+      "X": 380,
+      "Y": 350,
+      "Width": 420,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 420,
+      "Y": 330,
+      "Width": 250,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 440,
+      "Y": 310,
+      "Width": 210,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 460,
+      "Y": 290,
+      "Width": 170,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 480,
+      "Y": 270,
+      "Width": 130,
+      "Height": 20,
+      "Color": "White"
+    },
+    {
+      "X": 500,
+      "Y": 250,
+      "Width": 90,
+      "Height": 20,
+      "Color": "White"
+    }
+  ]
+}

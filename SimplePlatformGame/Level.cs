@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SimplePlatformGame.Components;
 using SimplePlatformGame.GameObjects;
+using SimplePlatformGame.JsonObjects;
 
 namespace SimplePlatformGame
 {
@@ -65,27 +69,30 @@ namespace SimplePlatformGame
 
         public void Load()
         {
-            var valuesStrings = System.IO.File.ReadAllLines(_path)
-                .Select(x => x)
-                .Where(x => !string.IsNullOrWhiteSpace(x));
-            foreach (var values in valuesStrings.Select(x => x.Split(" ")))
+            var jsonString = File.ReadAllText(_path);
+            var json = JObject.Parse(jsonString);
+
+            var jsonToken = json["player"];
+            var jsonPlayer = JsonConvert.DeserializeObject<JsonPlayer>(jsonToken.ToString());
+            
+            Player = new Player(
+                new Vector2(jsonPlayer.X, jsonPlayer.Y), 
+                jsonPlayer.RunSpeed, jsonPlayer.JumpSpeed, 
+                new SolidColorSprite(jsonPlayer.Width, jsonPlayer.Height, 
+                    JsonGameObject.Colors[(string)jsonToken["Color"]], _graphics)
+            );
+            _colliders.Add(Player.Collider);
+
+            foreach (var token in json["obstacles"])
             {
-                var (x, y) = (float.Parse(values[1]), float.Parse(values[2]));
-                var (width, height) = (int.Parse(values[3]), int.Parse(values[4]));
-                switch (values[0])
-                {
-                    case "player":
-                        Player = new Player(new Vector2(x, y), 5, 5, 
-                            new SolidColorSprite(width, height, Color.DimGray, _graphics));
-                        _colliders.Add(Player.Collider);
-                        break;
-                    case "obstacle":
-                        var obstacle = new Obstacle(new Vector2(x, y),
-                            new SolidColorSprite(width, height, Color.White, _graphics));
-                        _gameObjects.Add(obstacle);
-                        _colliders.Add(obstacle.Collider);
-                        break;
-                }
+                var jsonObstacle = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
+                var obstacle = new Obstacle(
+                    new Vector2(jsonObstacle.X, jsonObstacle.Y),
+                    new SolidColorSprite(jsonObstacle.Width, jsonObstacle.Height, 
+                        JsonGameObject.Colors[(string)token["Color"]], _graphics)
+                );
+                _gameObjects.Add(obstacle);
+                _colliders.Add(obstacle.Collider);
             }
         }
 
