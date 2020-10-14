@@ -10,7 +10,7 @@ namespace SimplePlatformGame
     public class Level
     {
         public Player Player { get; private set; }
-        public IList<Obstacle> Obstacles { get; }
+        public IList<GameObject> GameObjects { get; }
         public IList<Collider> Colliders { get; }
 
         private readonly string _path;
@@ -18,7 +18,7 @@ namespace SimplePlatformGame
         
         public Level(string path, GraphicsDevice graphicsDevice)
         {
-            Obstacles = new List<Obstacle>();
+            GameObjects = new List<GameObject>();
             Colliders = new List<Collider>();
             _path = path;
             _graphics = graphicsDevice;
@@ -54,7 +54,7 @@ namespace SimplePlatformGame
         public void Draw(SpriteBatch target)
         {
             Player.Draw(target);
-            foreach (var gameObject in Obstacles)
+            foreach (var gameObject in GameObjects)
             {
                 gameObject.Draw(target);
             }
@@ -81,7 +81,7 @@ namespace SimplePlatformGame
                     case "obstacle":
                         var obstacle = new Obstacle(new Vector2(posX, posY),
                             new SolidColorSprite(width, height, Color.White, _graphics));
-                        Obstacles.Add(obstacle);
+                        GameObjects.Add(obstacle);
                         Colliders.Add(obstacle.Collider);
                         break;
                 }
@@ -91,7 +91,7 @@ namespace SimplePlatformGame
         public void Dispose()
         {
             Player = null;
-            Obstacles.Clear();
+            GameObjects.Clear();
             Colliders.Clear();
         }
     }

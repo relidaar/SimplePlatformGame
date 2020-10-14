@@ -4,7 +4,7 @@ using SimplePlatformGame.Components;
 
 namespace SimplePlatformGame.GameObjects
 {
-    public abstract class GameObject : IGameObject
+    public abstract class GameObject
     {
         public Vector2 Position { get; protected set; }
         public ISprite Sprite { get; }
