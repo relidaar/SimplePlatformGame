@@ -77,7 +77,7 @@ namespace SimplePlatformGame
                 switch (values[0])
                 {
                     case "player":
-                        Player = new Player(new Vector2(posX, posY), 5, 
+                        Player = new Player(new Vector2(posX, posY), 5, 5, 
                             new SolidColorSprite(width, height, Color.DimGray, _graphics));
                         Colliders.Add(Player.Collider);
                         break;

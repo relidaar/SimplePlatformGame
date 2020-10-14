@@ -6,12 +6,15 @@ namespace SimplePlatformGame.GameObjects
 {
     public class Player : GameObject
     {
-        public float Speed { get; }
+        private readonly float _runSpeed;
+        private readonly float _jumpSpeed;
+
         public PlayerCollider Collider { get; }
 
-        public Player(Vector2 position, float speed, ISprite sprite) : base(position, sprite)
+        public Player(Vector2 position, float runSpeed, float jumpSpeed, ISprite sprite) : base(position, sprite)
         {
-            Speed = speed;
+            _runSpeed = runSpeed;
+            _jumpSpeed = jumpSpeed;
             Collider = new PlayerCollider(sprite.Bounds, Position);
         }
 
@@ -20,16 +23,16 @@ namespace SimplePlatformGame.GameObjects
             switch (direction)
             {
                 case Direction.Left:
-                    Collider.Velocity = new Vector2(-Speed, Collider.Velocity.Y);
+                    Collider.Velocity = new Vector2(-_runSpeed, Collider.Velocity.Y);
                     break;
                 case Direction.Right:
-                    Collider.Velocity = new Vector2(Speed, Collider.Velocity.Y);
+                    Collider.Velocity = new Vector2(_runSpeed, Collider.Velocity.Y);
                     break;
                 case Direction.Up:
-                    Collider.Velocity = new Vector2(Collider.Velocity.X, -Speed);
+                    Collider.Velocity = new Vector2(Collider.Velocity.X, -_runSpeed);
                     break;
                 case Direction.Down:
-                    Collider.Velocity = new Vector2(Collider.Velocity.X, Speed);
+                    Collider.Velocity = new Vector2(Collider.Velocity.X, _runSpeed);
                     break;
             }
         }
@@ -57,7 +60,7 @@ namespace SimplePlatformGame.GameObjects
         {
             if (!Collider.Grounded) return;
             
-            Collider.Velocity = new Vector2(Collider.Velocity.X, -Speed);
+            Collider.Velocity = new Vector2(Collider.Velocity.X, -_jumpSpeed);
             Collider.Grounded = false;
         }
 
