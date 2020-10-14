@@ -28,12 +28,6 @@ namespace SimplePlatformGame.GameObjects
                 case Direction.Right:
                     Collider.Velocity = new Vector2(_runSpeed, Collider.Velocity.Y);
                     break;
-                case Direction.Up:
-                    Collider.Velocity = new Vector2(Collider.Velocity.X, -_runSpeed);
-                    break;
-                case Direction.Down:
-                    Collider.Velocity = new Vector2(Collider.Velocity.X, _runSpeed);
-                    break;
             }
         }
 
@@ -46,12 +40,6 @@ namespace SimplePlatformGame.GameObjects
                     break;
                 case Direction.Right:
                     Collider.Velocity = new Vector2(0, Collider.Velocity.Y);
-                    break;
-                case Direction.Up:
-                    Collider.Velocity = new Vector2(Collider.Velocity.X, 0);
-                    break;
-                case Direction.Down:
-                    Collider.Velocity = new Vector2(Collider.Velocity.X, 0);
                     break;
             }
         }
