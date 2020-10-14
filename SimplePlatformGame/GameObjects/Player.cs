@@ -53,7 +53,15 @@ namespace SimplePlatformGame.GameObjects
             }
         }
 
-        public override void Update()
+        public void Jump()
+        {
+            if (!Collider.Grounded) return;
+            
+            Collider.Velocity = new Vector2(Collider.Velocity.X, -Speed);
+            Collider.Grounded = false;
+        }
+
+        public override void Update(Vector2 gravity)
         {
             Collider.OldPosition = Collider.Position;
             Collider.Position += Collider.Velocity;

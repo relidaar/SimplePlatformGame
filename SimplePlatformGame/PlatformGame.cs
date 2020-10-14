@@ -14,7 +14,7 @@ namespace SimplePlatformGame
         private IList<Level> _levels;
         private Level _currentLevel;
         private string _levelsDirectory;
-        private KeyboardState state;
+        private KeyboardState _state;
 
         public PlatformGame()
         {
@@ -29,7 +29,7 @@ namespace SimplePlatformGame
         {
             base.Initialize();
 
-            state = Keyboard.GetState();
+            _state = Keyboard.GetState();
         }
 
         protected override void LoadContent()
@@ -51,10 +51,10 @@ namespace SimplePlatformGame
             var currentState = Keyboard.GetState();
             float timeDelta = (float) gameTime.ElapsedGameTime.TotalSeconds;
             
-            if (state.IsKeyDown(Keys.Escape))
+            if (_state.IsKeyDown(Keys.Escape))
                 Exit();
 
-            var keys = new[]
+            var movement = new[]
             {
                 (Keys.Up, Direction.Up),
                 (Keys.Down, Direction.Down),
@@ -62,17 +62,22 @@ namespace SimplePlatformGame
                 (Keys.Right, Direction.Right),
             };
 
-            foreach (var (key, direction) in keys)
+            foreach (var (key, direction) in movement)
             {
-                if (currentState.IsKeyDown(key) && state.IsKeyUp(key))
+                if (currentState.IsKeyDown(key) && _state.IsKeyUp(key))
                     _currentLevel.Player.Move(direction);
-                if (currentState.IsKeyUp(key) && state.IsKeyDown(key))
+                if (currentState.IsKeyUp(key) && _state.IsKeyDown(key))
                     _currentLevel.Player.Stop(direction);
             }
 
-            state = currentState;
+            if (currentState.IsKeyDown(Keys.Space))
+            {
+                _currentLevel.Player.Jump();
+            }
+
+            _state = currentState;
             
-            _currentLevel.Update();
+            _currentLevel.Update(timeDelta);
 
             base.Update(gameTime);
         }
