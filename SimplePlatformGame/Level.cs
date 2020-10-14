@@ -54,12 +54,12 @@ namespace SimplePlatformGame
             }
         }
 
-        public void Draw(SpriteBatch target)
+        public void Draw(SpriteBatch target, float timeDelta)
         {
-            Player.Draw(target);
+            Player.Draw(target, timeDelta);
             foreach (var gameObject in GameObjects)
             {
-                gameObject.Draw(target);
+                gameObject.Draw(target, timeDelta);
             }
         }
 

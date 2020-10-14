@@ -21,7 +21,7 @@ namespace SimplePlatformGame.GameObjects
 
         public abstract void Update(Vector2 gravity);
 
-        public virtual void Draw(SpriteBatch target)
+        public virtual void Draw(SpriteBatch target, float timeDelta)
         {
             target.Draw(Sprite.Texture, Position, Color.White);
         }

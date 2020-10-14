@@ -15,6 +15,7 @@ namespace SimplePlatformGame
         private Level _currentLevel;
         private string _levelsDirectory;
         private KeyboardState _state;
+        private float _timeDelta;
 
         public PlatformGame()
         {
@@ -49,7 +50,7 @@ namespace SimplePlatformGame
         protected override void Update(GameTime gameTime)
         {
             var currentState = Keyboard.GetState();
-            float timeDelta = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            _timeDelta = (float) gameTime.ElapsedGameTime.TotalSeconds;
             
             if (_state.IsKeyDown(Keys.Escape))
                 Exit();
@@ -77,7 +78,7 @@ namespace SimplePlatformGame
 
             _state = currentState;
             
-            _currentLevel.Update(timeDelta);
+            _currentLevel.Update(_timeDelta);
 
             base.Update(gameTime);
         }
@@ -87,7 +88,7 @@ namespace SimplePlatformGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            _currentLevel.Draw(_spriteBatch);
+            _currentLevel.Draw(_spriteBatch, _timeDelta);
             _spriteBatch.End();
             
             base.Draw(gameTime);

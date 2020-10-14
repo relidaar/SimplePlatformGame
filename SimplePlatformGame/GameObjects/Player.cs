@@ -68,10 +68,10 @@ namespace SimplePlatformGame.GameObjects
             Collider.Velocity += gravity;
         }
 
-        public override void Draw(SpriteBatch target)
+        public override void Draw(SpriteBatch target, float timeDelta)
         {
-            Position = Collider.Position;
-            base.Draw(target);
+            Position = Collider.Position * timeDelta + Collider.OldPosition * (1f - timeDelta);
+            base.Draw(target, timeDelta);
         }
     }
 
