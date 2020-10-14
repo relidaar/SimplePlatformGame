@@ -16,6 +16,17 @@ namespace SimplePlatformGame.Components
             throw new System.NotImplementedException();
         }
 
+        public bool Intersects(ICollidable other)
+        {
+            var point = Position + new Point(HitBox.Left, HitBox.Top);
+            var rect = new Rectangle(point, HitBox.Size);
+            
+            var otherPosition = other.Position + new Point(other.HitBox.Left, other.HitBox.Top);
+            var otherRect = new Rectangle(otherPosition, other.HitBox.Size);
+            
+            return rect.Intersects(otherRect);
+        }
+
         public Collider(Rectangle hitBox,
             Point dimensions,
             Point position,

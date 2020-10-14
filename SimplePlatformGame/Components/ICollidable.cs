@@ -11,5 +11,6 @@ namespace SimplePlatformGame.Components
         Vector2 Velocity { get; set; }
         bool IsStatic { get; }
         bool OnContactBegin(ICollidable collidable, bool fromLeft, bool fromTop);
+        bool Intersects(ICollidable other);
     }
 }
