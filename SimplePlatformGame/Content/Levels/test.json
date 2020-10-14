@@ -19,6 +19,22 @@
       "Direction": "Right"
     }
   ],
+  "enemy_bounds" : [
+    {
+      "X": 220,
+      "Y": 350,
+      "Width": 1,
+      "Height": 100,
+      "Color": "Transparent"
+    },
+    {
+      "X": 379,
+      "Y": 350,
+      "Width": 20,
+      "Height": 100,
+      "Color": "Transparent"
+    }
+  ],
   "obstacles": [
     {
       "X": 0,

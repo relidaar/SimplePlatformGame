@@ -15,6 +15,7 @@ namespace SimplePlatformGame
     {
         public Player Player { get; private set; }
         private readonly List<Obstacle> _obstacles;
+        private List<Obstacle> _enemyBounds;
         private List<Coin> _coins;
         private List<Enemy> _enemies;
         private List<GameObject> _gameObjects;
@@ -27,6 +28,7 @@ namespace SimplePlatformGame
         public Level(string path, GraphicsDevice graphicsDevice)
         {
             _obstacles = new List<Obstacle>();
+            _enemyBounds = new List<Obstacle>();
             _coins = new List<Coin>();
             _enemies = new List<Enemy>();
             _gameObjects = new List<GameObject>();
@@ -52,6 +54,16 @@ namespace SimplePlatformGame
                 foreach (var obstacle in _obstacles.Where(obstacle => enemy.Collider.Intersects(obstacle.Collider)))
                 {
                     enemy.Collider.ResolveCollision(obstacle.Collider);
+                }
+                foreach (var _ in _enemyBounds.Where(x => enemy.Collider.Intersects(x.Collider)))
+                {
+                    enemy.ChangeDirection();
+                }
+                foreach (var otherEnemy in _enemies.Where(x => x != enemy && 
+                                                               enemy.Collider.Intersects(x.Collider)))
+                {
+                    otherEnemy.ChangeDirection();
+                    enemy.ChangeDirection();
                 }
             }
 
@@ -86,6 +98,18 @@ namespace SimplePlatformGame
                         JsonGameObject.Colors[(string) token["Color"]], _graphics)
                 );
                 _obstacles.Add(gameObject);
+                _gameObjects.Add(gameObject);
+            }
+
+            foreach (var token in json["enemy_bounds"])
+            {
+                var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
+                var gameObject = new Obstacle(
+                    new Vector2(jsonObject.X, jsonObject.Y),
+                    new SolidColorSprite(jsonObject.Width, jsonObject.Height,
+                        JsonGameObject.Colors[(string) token["Color"]], _graphics)
+                );
+                _enemyBounds.Add(gameObject);
                 _gameObjects.Add(gameObject);
             }
 
