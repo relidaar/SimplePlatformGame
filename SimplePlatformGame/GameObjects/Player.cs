@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using SimplePlatformGame.Components;
 
 namespace SimplePlatformGame.GameObjects
@@ -11,7 +12,7 @@ namespace SimplePlatformGame.GameObjects
         public Player(Vector2 position, float speed, ISprite sprite) : base(position, sprite)
         {
             Speed = speed;
-            Collider = new PlayerCollider(sprite.Bounds, Position);
+            Collider = new Collider(sprite.Bounds, Position);
         }
 
         public void Move(Direction direction)
@@ -19,23 +20,49 @@ namespace SimplePlatformGame.GameObjects
             switch (direction)
             {
                 case Direction.Left:
-                    Position = new Vector2(Position.X - Speed, Position.Y);
+                    Collider.Velocity = new Vector2(-Speed, Collider.Velocity.Y);
                     break;
                 case Direction.Right:
-                    Position = new Vector2(Position.X + Speed, Position.Y);
+                    Collider.Velocity = new Vector2(Speed, Collider.Velocity.Y);
                     break;
                 case Direction.Up:
-                    Position = new Vector2(Position.X, Position.Y - Speed);
+                    Collider.Velocity = new Vector2(Collider.Velocity.X, -Speed);
                     break;
                 case Direction.Down:
-                    Position = new Vector2(Position.X , Position.Y + Speed);
+                    Collider.Velocity = new Vector2(Collider.Velocity.X, Speed);
+                    break;
+            }
+        }
+
+        public void Stop(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Left:
+                    Collider.Velocity = new Vector2(0, Collider.Velocity.Y);
+                    break;
+                case Direction.Right:
+                    Collider.Velocity = new Vector2(0, Collider.Velocity.Y);
+                    break;
+                case Direction.Up:
+                    Collider.Velocity = new Vector2(Collider.Velocity.X, 0);
+                    break;
+                case Direction.Down:
+                    Collider.Velocity = new Vector2(Collider.Velocity.X, 0);
                     break;
             }
         }
 
         public override void Update()
         {
-            throw new System.NotImplementedException();
+            Collider.OldPosition = Collider.Position;
+            Collider.Position += Collider.Velocity;
+        }
+
+        public override void Draw(SpriteBatch target)
+        {
+            Position = Collider.Position;
+            base.Draw(target);
         }
     }
 
