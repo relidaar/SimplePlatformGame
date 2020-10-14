@@ -1,21 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SimplePlatformGame.Components;
+using SimplePlatformGame.GameObjects;
 
 namespace SimplePlatformGame
 {
     public class Level
     {
         public Player Player { get; private set; }
-        public IList<IGameObject> GameObjects { get; }
+        public IList<Obstacle> Obstacles { get; }
+        public IList<ICollidable> Collidables { get; }
 
         private readonly string _path;
         private readonly GraphicsDevice _graphics;
         
         public Level(string path, GraphicsDevice graphicsDevice)
         {
-            GameObjects = new List<IGameObject>();
+            Obstacles = new List<Obstacle>();
+            Collidables = new List<ICollidable>();
             _path = path;
             _graphics = graphicsDevice;
         }
@@ -23,7 +28,7 @@ namespace SimplePlatformGame
         public void Update()
         {
             Player.Update();
-            foreach (var gameObject in GameObjects)
+            foreach (var gameObject in Obstacles)
             {
                 gameObject.Update();
             }
@@ -32,7 +37,7 @@ namespace SimplePlatformGame
         public void Draw(SpriteBatch target)
         {
             Player.Draw(target);
-            foreach (var gameObject in GameObjects)
+            foreach (var gameObject in Obstacles)
             {
                 gameObject.Draw(target);
             }
@@ -49,17 +54,18 @@ namespace SimplePlatformGame
                 float posY = float.Parse(values[2]);
                 int width = int.Parse(values[3]);
                 int height = int.Parse(values[4]);
-                bool isStatic = bool.Parse(values[5]);
                 switch (values[0])
                 {
                     case "player":
                         Player = new Player(new Vector2(posX, posY), 5, 
                             new SolidColorSprite(width, height, Color.DimGray, _graphics));
+                        Collidables.Add(Player.Collider);
                         break;
                     case "obstacle":
-                        var obstacle = new GameObject(new Vector2(posX, posY), isStatic,
+                        var obstacle = new Obstacle(new Vector2(posX, posY),
                             new SolidColorSprite(width, height, Color.White, _graphics));
-                        GameObjects.Add(obstacle);
+                        Obstacles.Add(obstacle);
+                        Collidables.Add(obstacle.Collider);
                         break;
                 }
             }
@@ -68,7 +74,7 @@ namespace SimplePlatformGame
         public void Dispose()
         {
             Player = null;
-            GameObjects.Clear();
+            Obstacles.Clear();
         }
     }
 }
