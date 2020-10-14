@@ -6,11 +6,13 @@ namespace SimplePlatformGame.GameObjects
 {
     public abstract class GameObject
     {
+        public Collider Collider { get; }
         protected Vector2 Position { get; set; }
         private ISprite Sprite { get; }
 
-        protected GameObject(Vector2 position, ISprite sprite)
+        protected GameObject(Vector2 position, ISprite sprite, Collider collider)
         {
+            Collider = collider;
             Position = position;
             Sprite = sprite;
         }

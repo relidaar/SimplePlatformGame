@@ -9,13 +9,11 @@ namespace SimplePlatformGame.GameObjects
         private readonly float _runSpeed;
         private readonly float _jumpSpeed;
 
-        public PlayerCollider Collider { get; }
-
-        public Player(Vector2 position, float runSpeed, float jumpSpeed, ISprite sprite) : base(position, sprite)
+        public Player(Vector2 position, float runSpeed, float jumpSpeed, ISprite sprite) 
+            : base(position, sprite, new PlayerCollider(sprite.Bounds, position))
         {
             _runSpeed = runSpeed;
             _jumpSpeed = jumpSpeed;
-            Collider = new PlayerCollider(sprite.Bounds, Position);
         }
 
         public void Move(Direction direction)
@@ -58,10 +56,11 @@ namespace SimplePlatformGame.GameObjects
 
         public void Jump()
         {
-            if (!Collider.Grounded) return;
+            var collider = (PlayerCollider) Collider;
+            if (!collider.Grounded) return;
             
-            Collider.Velocity = new Vector2(Collider.Velocity.X, -_jumpSpeed);
-            Collider.Grounded = false;
+            collider.Velocity = new Vector2(collider.Velocity.X, -_jumpSpeed);
+            collider.Grounded = false;
         }
 
         public override void Update(Vector2 gravity)
