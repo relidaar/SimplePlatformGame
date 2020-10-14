@@ -10,7 +10,7 @@ namespace SimplePlatformGame.Components
         Point OldPosition { get; set; }
         Vector2 Velocity { get; set; }
         bool IsStatic { get; }
-        bool OnContactBegin(ICollidable collidable, bool fromLeft, bool fromTop);
+        bool OnContactBegin(ICollidable other, bool fromLeft, bool fromTop);
         bool Intersects(ICollidable other);
     }
 }

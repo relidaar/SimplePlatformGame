@@ -11,7 +11,7 @@ namespace SimplePlatformGame.GameObjects
         public int Width { get; }
         public int Height { get; }
 
-        public GameObject(Vector2 position, ISprite sprite)
+        protected GameObject(Vector2 position, ISprite sprite)
         {
             Position = position;
             Sprite = sprite;

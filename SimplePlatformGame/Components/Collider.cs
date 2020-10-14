@@ -2,7 +2,7 @@
 
 namespace SimplePlatformGame.Components
 {
-    public class Collider : ICollidable
+    public abstract class Collider : ICollidable
     {
         public Rectangle HitBox { get; set; }
         public Point Dimensions { get; set; }
@@ -10,11 +10,8 @@ namespace SimplePlatformGame.Components
         public Point OldPosition { get; set; }
         public Vector2 Velocity { get; set; }
         public bool IsStatic { get; }
-        
-        public bool OnContactBegin(ICollidable collidable, bool fromLeft, bool fromTop)
-        {
-            throw new System.NotImplementedException();
-        }
+
+        public abstract bool OnContactBegin(ICollidable other, bool fromLeft, bool fromTop);
 
         public bool Intersects(ICollidable other)
         {
@@ -27,7 +24,7 @@ namespace SimplePlatformGame.Components
             return rect.Intersects(otherRect);
         }
 
-        public Collider(Rectangle hitBox,
+        protected Collider(Rectangle hitBox,
             Point dimensions,
             Point position,
             Point oldPosition,
