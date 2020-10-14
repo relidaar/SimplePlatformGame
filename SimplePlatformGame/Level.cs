@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,6 +30,24 @@ namespace SimplePlatformGame
             foreach (var obstacle in Obstacles)
             {
                 obstacle.Update();
+            }
+ 
+            foreach (var collider in Colliders)
+            {
+                foreach (var other in Colliders.Where(c => !c.Equals(collider)))
+                {
+                    var dynamicCollidable = collider;
+                    var staticCollidable = other;
+
+                    if (collider.IsStatic)
+                    {
+                        dynamicCollidable = other;
+                        staticCollidable = collider;
+                    }
+                    
+                    if (dynamicCollidable.Intersects(staticCollidable))
+                        dynamicCollidable.ResolveCollision(staticCollidable);
+                }
             }
         }
 
