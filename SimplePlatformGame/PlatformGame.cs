@@ -11,10 +11,13 @@ namespace SimplePlatformGame
     {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private SpriteFont _font;
         
-        private IList<Level> _levels;
-        private Level _currentLevel;
+        private List<Level> _levels;
+        private List<Level>.Enumerator _currentLevel;
         private readonly string _levelsDirectory;
+        private bool _gameOver;
+        private int _coins = 0;
         
         private KeyboardState _state;
         private float _timeDelta;
@@ -38,6 +41,7 @@ namespace SimplePlatformGame
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _font = Content.Load<SpriteFont>("Font");
 
             _levels = new List<Level>();
             foreach (string filePath in Directory.GetFiles( $"{Content.RootDirectory}/{_levelsDirectory}/"))
@@ -45,8 +49,9 @@ namespace SimplePlatformGame
                 _levels.Add(new Level(filePath, _graphics.GraphicsDevice));
             }
             
-            _currentLevel = _levels[0];
-            _currentLevel.Load();
+            _currentLevel = _levels.GetEnumerator();
+            _currentLevel.MoveNext();
+            _currentLevel.Current?.Load();
         }
 
         protected override void Update(GameTime gameTime)
@@ -56,6 +61,19 @@ namespace SimplePlatformGame
             
             if (_state.IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (_currentLevel.Current == null)
+            {
+                _gameOver = true;
+                return;
+            }
+
+            if (_currentLevel.Current.Passed)
+            {
+                _coins += _currentLevel.Current.CollectedCoins;
+                _currentLevel.Current.Unload();
+                _currentLevel.MoveNext();
+            }
 
             var movement = new[]
             {
@@ -68,29 +86,42 @@ namespace SimplePlatformGame
             foreach (var (key, direction) in movement)
             {
                 if (currentState.IsKeyDown(key) && _state.IsKeyUp(key))
-                    _currentLevel.Player.Move(direction);
+                    _currentLevel.Current?.Player.Move(direction);
                 if (currentState.IsKeyUp(key) && _state.IsKeyDown(key))
-                    _currentLevel.Player.Stop(direction);
+                    _currentLevel.Current?.Player.Stop(direction);
             }
 
             if (currentState.IsKeyDown(Keys.Space))
             {
-                _currentLevel.Player.Jump();
+                _currentLevel.Current?.Player.Jump();
             }
 
             _state = currentState;
             
-            _currentLevel.Update(_timeDelta);
+            _currentLevel.Current?.Update(_timeDelta);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.SkyBlue);
 
             _spriteBatch.Begin();
-            _currentLevel.Draw(_spriteBatch, _timeDelta);
+            if (_currentLevel.Current != null)
+            {
+                _currentLevel.Current?.Draw(_spriteBatch, _timeDelta);
+                _spriteBatch.DrawString(_font, $"Coins: {_currentLevel.Current.CollectedCoins}", 
+                    new Vector2(10, 10), Color.White);
+            }
+            
+            if (_gameOver)
+            {
+                _spriteBatch.DrawString(_font, "Game Over", 
+                    new Vector2(320, 220), Color.White);
+                _spriteBatch.DrawString(_font, $"You collected {_coins} " + (_coins > 1 ? "coins" : "coin"), 
+                    new Vector2(260, 260), Color.White);
+            }
             _spriteBatch.End();
             
             base.Draw(gameTime);

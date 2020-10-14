@@ -63,7 +63,10 @@ namespace SimplePlatformGame
                 Unload();
                 Load();
             }
-            _coins = _coins.Where(coin => !Player.Collider.Intersects(coin.Collider)).ToList();
+            var collected = _coins.Where(coin => Player.Collider.Intersects(coin.Collider)).ToList();
+            CollectedCoins += collected.Count;
+            _coins.RemoveAll(x => collected.Contains(x));
+            collected.Clear();
 
             _enemies.ForEach(x => x.Update(gravity));
             foreach (var enemy in _enemies)
@@ -156,6 +159,9 @@ namespace SimplePlatformGame
                         JsonGameObject.Colors[(string)token["Color"]], _graphics)
                 ));
             }
+
+            Passed = false;
+            CollectedCoins = 0;
         }
 
         public void Unload()
