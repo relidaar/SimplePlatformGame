@@ -18,7 +18,8 @@ namespace SimplePlatformGame.JsonObjects
             {"DimGray", Color.DimGray},
             {"Red", Color.Red},
             {"Transparent", Color.Transparent},
-            {"Gold", Color.Gold}
+            {"Gold", Color.Gold},
+            {"Indigo", Color.Indigo}
         };
     }
 }

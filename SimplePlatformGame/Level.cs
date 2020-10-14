@@ -13,11 +13,16 @@ namespace SimplePlatformGame
 {
     public class Level
     {
+        public bool Passed { get; private set; }
+        
         public Player Player { get; private set; }
+        public int CollectedCoins { get; private set; }
+
+        private Obstacle _teleport;
         private readonly List<Obstacle> _obstacles;
-        private List<Obstacle> _enemyBounds;
-        private List<Coin> _coins;
-        private List<Enemy> _enemies;
+        private readonly List<Obstacle> _enemyBounds;
+        private readonly List<Coin> _coins;
+        private readonly List<Enemy> _enemies;
 
         private readonly Vector2 _gravity;
 
@@ -38,6 +43,13 @@ namespace SimplePlatformGame
 
         public void Update(float timeDelta)
         {
+            if (Passed) return;
+            if (Player.Collider.Intersects(_teleport.Collider))
+            {
+                Passed = true;
+                return;
+            }
+            
             var gravity = _gravity * timeDelta;
             
             Player.Update(gravity);
@@ -76,6 +88,7 @@ namespace SimplePlatformGame
         public void Draw(SpriteBatch target, float timeDelta)
         {
             Player.Draw(target, timeDelta);
+            _teleport.Draw(target, timeDelta);
             _obstacles.ForEach(x => x.Draw(target, timeDelta));
             _enemyBounds.ForEach(x => x.Draw(target, timeDelta));
             _coins.ForEach(x => x.Draw(target, timeDelta));
@@ -87,14 +100,21 @@ namespace SimplePlatformGame
             var jsonString = File.ReadAllText(_path);
             var json = JObject.Parse(jsonString);
 
-            var jsonToken = json["player"];
-            var jsonPlayer = JsonConvert.DeserializeObject<JsonPlayer>(jsonToken.ToString());
-            
+            var jsonPlayerToken = json["player"];
+            var jsonPlayer = JsonConvert.DeserializeObject<JsonPlayer>(jsonPlayerToken.ToString());
             Player = new Player(
                 new Vector2(jsonPlayer.X, jsonPlayer.Y), 
                 jsonPlayer.RunSpeed, jsonPlayer.JumpSpeed, 
                 new SolidColorSprite(jsonPlayer.Width, jsonPlayer.Height, 
-                    JsonGameObject.Colors[(string)jsonToken["Color"]], _graphics)
+                    JsonGameObject.Colors[(string)jsonPlayerToken["Color"]], _graphics)
+            );
+
+            var jsonTeleportToken = json["teleport"];
+            var jsonTeleport = JsonConvert.DeserializeObject<JsonGameObject>(jsonTeleportToken.ToString());
+            _teleport = new Obstacle(
+                new Vector2(jsonTeleport.X, jsonTeleport.Y),
+                new SolidColorSprite(jsonTeleport.Width, jsonTeleport.Height,
+                    JsonGameObject.Colors[(string) jsonTeleportToken["Color"]], _graphics)
             );
 
             foreach (var token in json["obstacles"])
@@ -141,6 +161,7 @@ namespace SimplePlatformGame
         public void Unload()
         {
             Player = null;
+            _teleport = null;
             _obstacles.Clear();
             _coins.Clear();
             _enemies.Clear();

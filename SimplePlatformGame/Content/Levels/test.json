@@ -8,6 +8,13 @@
     "RunSpeed": 3,
     "JumpSpeed": 5
   },
+  "teleport" : {
+    "X": 760,
+    "Y": 200,
+    "Width": 20,
+    "Height": 100,
+    "Color": "Indigo"
+  },
   "enemies" : [
     {
       "X": 220,
@@ -144,7 +151,21 @@
   ],
   "coins": [
     {
+      "X": 100,
+      "Y": 180,
+      "Width": 20,
+      "Height": 20,
+      "Color": "Gold"
+    },
+    {
       "X": 290,
+      "Y": 180,
+      "Width": 20,
+      "Height": 20,
+      "Color": "Gold"
+    },
+    {
+      "X": 700,
       "Y": 180,
       "Width": 20,
       "Height": 20,
