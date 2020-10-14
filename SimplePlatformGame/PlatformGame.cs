@@ -9,11 +9,13 @@ namespace SimplePlatformGame
 {
     public class PlatformGame : Game
     {
-        private GraphicsDeviceManager _graphics;
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        
         private IList<Level> _levels;
         private Level _currentLevel;
-        private string _levelsDirectory;
+        private readonly string _levelsDirectory;
+        
         private KeyboardState _state;
         private float _timeDelta;
 
