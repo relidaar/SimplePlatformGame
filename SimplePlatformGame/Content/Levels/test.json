@@ -114,5 +114,14 @@
       "Height": 1,
       "Color": "Transparent"
     }
+  ],
+  "coins": [
+    {
+      "X": 290,
+      "Y": 180,
+      "Width": 20,
+      "Height": 20,
+      "Color": "Gold"
+    }
   ]
 }

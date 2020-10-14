@@ -14,8 +14,8 @@ namespace SimplePlatformGame
     public class Level
     {
         public Player Player { get; private set; }
-        private readonly IList<Collider> _colliders;
-        private readonly IList<GameObject> _gameObjects;
+        private readonly IList<Obstacle> _obstacles;
+        private IList<Coin> _coins;
 
         private readonly Vector2 _gravity;
 
@@ -24,8 +24,9 @@ namespace SimplePlatformGame
 
         public Level(string path, GraphicsDevice graphicsDevice)
         {
-            _gameObjects = new List<GameObject>();
-            _colliders = new List<Collider>();
+            _obstacles = new List<Obstacle>();
+            _coins = new List<Coin>();
+            
             _path = path;
             _graphics = graphicsDevice;
             _gravity = new Vector2(0, 10);
@@ -34,36 +35,29 @@ namespace SimplePlatformGame
         public void Update(float timeDelta)
         {
             Player.Update(_gravity * timeDelta);
-            foreach (var gameObject in _gameObjects)
-            {
-                gameObject.Update(_gravity * timeDelta);
-            }
- 
-            foreach (var collider in _colliders)
-            {
-                foreach (var other in _colliders.Where(c => !c.Equals(collider)))
-                {
-                    var dynamicCollidable = collider;
-                    var staticCollidable = other;
 
-                    if (collider.IsStatic)
-                    {
-                        dynamicCollidable = other;
-                        staticCollidable = collider;
-                    }
-                    
-                    if (dynamicCollidable.Intersects(staticCollidable))
-                        dynamicCollidable.ResolveCollision(staticCollidable);
+            foreach (var obstacle in _obstacles)
+            {
+                if (Player.Collider.Intersects(obstacle.Collider))
+                {
+                    Player.Collider.ResolveCollision(obstacle.Collider);
                 }
             }
+
+            _coins = _coins.Where(coin => !Player.Collider.Intersects(coin.Collider)).ToList();
         }
 
         public void Draw(SpriteBatch target, float timeDelta)
         {
             Player.Draw(target, timeDelta);
-            foreach (var gameObject in _gameObjects)
+            foreach (var gameObject in _obstacles)
             {
                 gameObject.Draw(target, timeDelta);
+            }
+
+            foreach (var coin in _coins)
+            {
+                coin.Draw(target, timeDelta);
             }
         }
 
@@ -81,26 +75,33 @@ namespace SimplePlatformGame
                 new SolidColorSprite(jsonPlayer.Width, jsonPlayer.Height, 
                     JsonGameObject.Colors[(string)jsonToken["Color"]], _graphics)
             );
-            _colliders.Add(Player.Collider);
 
             foreach (var token in json["obstacles"])
             {
                 var jsonObstacle = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
-                var obstacle = new Obstacle(
+                _obstacles.Add(new Obstacle(
                     new Vector2(jsonObstacle.X, jsonObstacle.Y),
                     new SolidColorSprite(jsonObstacle.Width, jsonObstacle.Height, 
                         JsonGameObject.Colors[(string)token["Color"]], _graphics)
-                );
-                _gameObjects.Add(obstacle);
-                _colliders.Add(obstacle.Collider);
+                ));
+            }
+
+            foreach (var token in json["coins"])
+            {
+                var jsonObstacle = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
+                _coins.Add(new Coin(
+                    new Vector2(jsonObstacle.X, jsonObstacle.Y),
+                    new SolidColorSprite(jsonObstacle.Width, jsonObstacle.Height, 
+                        JsonGameObject.Colors[(string)token["Color"]], _graphics)
+                ));
             }
         }
 
         public void Dispose()
         {
             Player = null;
-            _gameObjects.Clear();
-            _colliders.Clear();
+            _obstacles.Clear();
+            _coins.Clear();
         }
     }
 }
