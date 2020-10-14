@@ -7,12 +7,12 @@ namespace SimplePlatformGame.GameObjects
     public class Player : GameObject
     {
         public float Speed { get; }
-        public Collider Collider { get; }
+        public PlayerCollider Collider { get; }
 
         public Player(Vector2 position, float speed, ISprite sprite) : base(position, sprite)
         {
             Speed = speed;
-            Collider = new Collider(sprite.Bounds, Position);
+            Collider = new PlayerCollider(sprite.Bounds, Position);
         }
 
         public void Move(Direction direction)
