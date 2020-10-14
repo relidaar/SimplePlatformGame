@@ -14,6 +14,7 @@ namespace SimplePlatformGame
         private IList<Level> _levels;
         private Level _currentLevel;
         private string _levelsDirectory;
+        private KeyboardState state;
 
         public PlatformGame()
         {
@@ -27,6 +28,8 @@ namespace SimplePlatformGame
         protected override void Initialize()
         {
             base.Initialize();
+
+            state = Keyboard.GetState();
         }
 
         protected override void LoadContent()
@@ -45,20 +48,31 @@ namespace SimplePlatformGame
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-            
-            var state = Keyboard.GetState();
+            var currentState = Keyboard.GetState();
             float timeDelta = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            if (state.IsKeyDown(Keys.Up))
-                _currentLevel.Player.Move(Direction.Up);
-            if(state.IsKeyDown(Keys.Down))
-                _currentLevel.Player.Move(Direction.Down);
-            if (state.IsKeyDown(Keys.Left))
-                _currentLevel.Player.Move(Direction.Left);
-            if(state.IsKeyDown(Keys.Right))
-                _currentLevel.Player.Move(Direction.Right);
+            
+            if (state.IsKeyDown(Keys.Escape))
+                Exit();
+
+            var keys = new[]
+            {
+                (Keys.Up, Direction.Up),
+                (Keys.Down, Direction.Down),
+                (Keys.Left, Direction.Left),
+                (Keys.Right, Direction.Right),
+            };
+
+            foreach (var (key, direction) in keys)
+            {
+                if (currentState.IsKeyDown(key) && state.IsKeyUp(key))
+                    _currentLevel.Player.Move(direction);
+                if (currentState.IsKeyUp(key) && state.IsKeyDown(key))
+                    _currentLevel.Player.Stop(direction);
+            }
+
+            state = currentState;
+            
+            _currentLevel.Update();
 
             base.Update(gameTime);
         }
