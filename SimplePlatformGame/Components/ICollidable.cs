@@ -12,5 +12,6 @@ namespace SimplePlatformGame.Components
         bool IsStatic { get; }
         bool OnContactBegin(ICollidable other, bool fromLeft, bool fromTop);
         bool Intersects(ICollidable other);
+        void ResolveCollision(ICollidable other);
     }
 }
