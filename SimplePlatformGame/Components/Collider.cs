@@ -3,29 +3,38 @@ using Microsoft.Xna.Framework;
 
 namespace SimplePlatformGame.Components
 {
-    public abstract class Collider : ICollidable
+    public class Collider
     {
-        public Rectangle HitBox { get; set; }
-        public Point Dimensions { get; set; }
-        public Point Position { get; set; }
-        public Point OldPosition { get; set; }
+        public Rectangle HitBox { get; }
+        public Vector2 Position { get; set; }
+        public Vector2 OldPosition { get; set; }
         public Vector2 Velocity { get; set; }
         public bool IsStatic { get; }
 
-        public abstract bool OnContactBegin(ICollidable other, bool fromLeft, bool fromTop);
-
-        public bool Intersects(ICollidable other)
+        public Collider(Rectangle hitBox, Vector2 position, bool isStatic = false)
         {
-            var point = Position + new Point(HitBox.Left, HitBox.Top);
-            var rect = new Rectangle(point, HitBox.Size);
+            HitBox = hitBox;
+            Position = position;
+            IsStatic = isStatic;
+        }
+
+        protected virtual bool OnContactBegin(Collider other, bool fromLeft, bool fromTop)
+        {
+            return true;
+        }
+
+        public bool Intersects(Collider other)
+        {
+            var (x, y) = Position + new Vector2(HitBox.Left, HitBox.Top);
+            var rect = new Rectangle(new Point((int) x, (int) y), HitBox.Size);
             
-            var otherPosition = other.Position + new Point(other.HitBox.Left, other.HitBox.Top);
-            var otherRect = new Rectangle(otherPosition, other.HitBox.Size);
+            var (otherX, otherY) = other.Position + new Vector2(other.HitBox.Left, other.HitBox.Top);
+            var otherRect = new Rectangle(new Point((int) otherX, (int) otherY), other.HitBox.Size);
             
             return rect.Intersects(otherRect);
         }
 
-        public void ResolveCollision(ICollidable other)
+        public void ResolveCollision(Collider other)
         {
             (float left, float top, float right, float bottom) bounds = (
                 Position.X + HitBox.Left,
@@ -75,12 +84,12 @@ namespace SimplePlatformGame.Components
             if (fromTop)
             {
                 Position = stair ? 
-                    new Point(Position.X - 5, (int) (Position.Y - overlapY)) :
-                    new Point(Position.X, (int) (Position.Y - overlapY));
+                    new Vector2(Position.X - 5, (int) (Position.Y - overlapY)) :
+                    new Vector2(Position.X, (int) (Position.Y - overlapY));
             }
             else
             {
-                Position = new Point(Position.X, (int) (Position.Y + overlapY));
+                Position = new Vector2(Position.X, (int) (Position.Y + overlapY));
             }
         }
 
@@ -94,23 +103,8 @@ namespace SimplePlatformGame.Components
                 
             Velocity = new Vector2(0, Velocity.Y);
             Position = fromLeft ? 
-                new Point((int) (Position.X - overlapX), Position.Y) : 
-                new Point((int) (Position.X + overlapX), Position.Y);
-        }
-
-        protected Collider(Rectangle hitBox,
-            Point dimensions,
-            Point position,
-            Point oldPosition,
-            Vector2 velocity,
-            bool isStatic)
-        {
-            HitBox = hitBox;
-            Dimensions = dimensions;
-            Position = position;
-            OldPosition = oldPosition;
-            Velocity = velocity;
-            IsStatic = isStatic;
+                new Vector2((int) (Position.X - overlapX), Position.Y) : 
+                new Vector2((int) (Position.X + overlapX), Position.Y);
         }
     }
 }

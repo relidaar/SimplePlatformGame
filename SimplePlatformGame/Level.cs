@@ -12,7 +12,7 @@ namespace SimplePlatformGame
     {
         public Player Player { get; private set; }
         public IList<Obstacle> Obstacles { get; }
-        public IList<ICollidable> Collidables { get; }
+        public IList<Collider> Colliders { get; }
 
         private readonly string _path;
         private readonly GraphicsDevice _graphics;
@@ -20,7 +20,7 @@ namespace SimplePlatformGame
         public Level(string path, GraphicsDevice graphicsDevice)
         {
             Obstacles = new List<Obstacle>();
-            Collidables = new List<ICollidable>();
+            Colliders = new List<Collider>();
             _path = path;
             _graphics = graphicsDevice;
         }
@@ -28,9 +28,9 @@ namespace SimplePlatformGame
         public void Update()
         {
             Player.Update();
-            foreach (var gameObject in Obstacles)
+            foreach (var obstacle in Obstacles)
             {
-                gameObject.Update();
+                obstacle.Update();
             }
         }
 
@@ -59,13 +59,13 @@ namespace SimplePlatformGame
                     case "player":
                         Player = new Player(new Vector2(posX, posY), 5, 
                             new SolidColorSprite(width, height, Color.DimGray, _graphics));
-                        Collidables.Add(Player.Collider);
+                        Colliders.Add(Player.Collider);
                         break;
                     case "obstacle":
                         var obstacle = new Obstacle(new Vector2(posX, posY),
                             new SolidColorSprite(width, height, Color.White, _graphics));
                         Obstacles.Add(obstacle);
-                        Collidables.Add(obstacle.Collider);
+                        Colliders.Add(obstacle.Collider);
                         break;
                 }
             }
@@ -75,7 +75,7 @@ namespace SimplePlatformGame
         {
             Player = null;
             Obstacles.Clear();
-            Collidables.Clear();
+            Colliders.Clear();
         }
     }
 }
