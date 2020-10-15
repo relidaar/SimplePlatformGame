@@ -4,20 +4,27 @@ using SimplePlatformGame.Components;
 
 namespace SimplePlatformGame.GameObjects
 {
-    public abstract class GameObject
+    public class GameObject
     {
         public Collider Collider { get; }
         protected Vector2 Position { get; set; }
         private ISprite Sprite { get; }
 
-        protected GameObject(Vector2 position, ISprite sprite, Collider collider)
+        public GameObject(Vector2 position, ISprite sprite, Collider collider)
         {
             Collider = collider;
             Position = position;
             Sprite = sprite;
         }
 
-        public abstract void Update(Vector2 gravity);
+        public GameObject(Vector2 position, ISprite sprite, bool isStatic)
+            : this(position, sprite, new Collider(sprite.Bounds, position, isStatic))
+        {
+        }
+
+        public virtual void Update(Vector2 gravity)
+        {
+        }
 
         public virtual void Draw(SpriteBatch target, float timeDelta)
         {
