@@ -108,7 +108,7 @@ namespace SimplePlatformGame
             Player = new Player(
                 new Vector2(jsonPlayer.X, jsonPlayer.Y), 
                 jsonPlayer.RunSpeed, jsonPlayer.JumpSpeed, 
-                new SolidColorSprite(jsonPlayer.Width, jsonPlayer.Height, 
+                new Sprite(jsonPlayer.Width, jsonPlayer.Height, 
                     JsonGameObject.Colors[(string)jsonPlayerToken["Color"]], _graphics)
             );
 
@@ -116,7 +116,7 @@ namespace SimplePlatformGame
             var jsonTeleport = JsonConvert.DeserializeObject<JsonGameObject>(jsonTeleportToken.ToString());
             _teleport = new GameObject(
                 new Vector2(jsonTeleport.X, jsonTeleport.Y),
-                new SolidColorSprite(jsonTeleport.Width, jsonTeleport.Height,
+                new Sprite(jsonTeleport.Width, jsonTeleport.Height,
                     JsonGameObject.Colors[(string) jsonTeleportToken["Color"]], _graphics), true
             );
 
@@ -125,7 +125,7 @@ namespace SimplePlatformGame
                 var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
                 _obstacles.Add(new GameObject(
                     new Vector2(jsonObject.X, jsonObject.Y),
-                    new SolidColorSprite(jsonObject.Width, jsonObject.Height,
+                    new Sprite(jsonObject.Width, jsonObject.Height,
                         JsonGameObject.Colors[(string) token["Color"]], _graphics), true
                 ));
             }
@@ -135,7 +135,7 @@ namespace SimplePlatformGame
                 var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
                 _enemyBounds.Add(new GameObject(
                     new Vector2(jsonObject.X, jsonObject.Y),
-                    new SolidColorSprite(jsonObject.Width, jsonObject.Height,
+                    new Sprite(jsonObject.Width, jsonObject.Height,
                         JsonGameObject.Colors[(string) token["Color"]], _graphics), true
                 ));
             }
@@ -145,7 +145,7 @@ namespace SimplePlatformGame
                 var jsonObject = JsonConvert.DeserializeObject<JsonGameObject>(token.ToString());
                 _coins.Add(new GameObject(
                     new Vector2(jsonObject.X, jsonObject.Y),
-                    new SolidColorSprite(jsonObject.Width, jsonObject.Height,
+                    new Sprite(jsonObject.Width, jsonObject.Height,
                         JsonGameObject.Colors[(string) token["Color"]], _graphics), true
                 ));
             }
@@ -155,7 +155,7 @@ namespace SimplePlatformGame
                 var jsonObject = JsonConvert.DeserializeObject<JsonEnemy>(token.ToString());
                 _enemies.Add(new Enemy(
                     new Vector2(jsonObject.X, jsonObject.Y), jsonObject.Speed, jsonObject.Direction,
-                    new SolidColorSprite(jsonObject.Width, jsonObject.Height, 
+                    new Sprite(jsonObject.Width, jsonObject.Height, 
                         JsonGameObject.Colors[(string)token["Color"]], _graphics)
                 ));
             }
