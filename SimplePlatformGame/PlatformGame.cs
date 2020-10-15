@@ -79,11 +79,12 @@ namespace SimplePlatformGame
 
             var movement = new[]
             {
-                (Keys.Up, Direction.Up),
-                (Keys.Down, Direction.Down),
+                (Keys.A, Direction.Left),
+                (Keys.D, Direction.Right),
                 (Keys.Left, Direction.Left),
                 (Keys.Right, Direction.Right),
             };
+            var jump = new[] {Keys.Space, Keys.W, Keys.Up};
 
             foreach (var (key, direction) in movement)
             {
@@ -93,9 +94,10 @@ namespace SimplePlatformGame
                     _currentLevel.Current?.Player.Stop(direction);
             }
 
-            if (currentState.IsKeyDown(Keys.Space))
+            foreach (var key in jump)
             {
-                _currentLevel.Current?.Player.Jump();
+                if (currentState.IsKeyDown(key))
+                    _currentLevel.Current?.Player.Jump();
             }
 
             _state = currentState;
