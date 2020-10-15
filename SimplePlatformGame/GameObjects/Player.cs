@@ -10,7 +10,7 @@ namespace SimplePlatformGame.GameObjects
         private readonly float _runSpeed;
         private readonly float _jumpSpeed;
 
-        public Player(Vector2 position, float runSpeed, float jumpSpeed, ISprite sprite) 
+        public Player(Vector2 position, float runSpeed, float jumpSpeed, Sprite sprite) 
             : base(position, sprite, new PlayerCollider(sprite.Bounds, position))
         {
             _runSpeed = runSpeed;

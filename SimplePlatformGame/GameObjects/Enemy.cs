@@ -9,7 +9,7 @@ namespace SimplePlatformGame.GameObjects
         private readonly float _speed;
         private Direction _currentDirection;
         
-        public Enemy(Vector2 position, float speed, Direction direction, ISprite sprite) 
+        public Enemy(Vector2 position, float speed, Direction direction, Sprite sprite) 
             : base(position, sprite, new Collider(sprite.Bounds, position))
         {
             _speed = speed;
